@@ -1,0 +1,15 @@
+[options]
+mode prove
+depth 20
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal hardware/src/boreal_dual_clamp.sv
+read -formal hardware/formal/sva_assertions.sv
+prep -top boreal_dual_clamp
+
+[files]
+hardware/src/boreal_dual_clamp.sv
+hardware/formal/sva_assertions.sv
