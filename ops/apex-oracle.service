@@ -1,0 +1,18 @@
+[Unit]
+Description=APEX War Machine AI Oracle (Mamba-2)
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/poly-trader
+ExecStart=/opt/poly-trader/venv_ai/bin/python3 /opt/poly-trader/oracles/apex_oracle.py
+Restart=always
+RestartSec=3
+Environment="CUDA_VISIBLE_DEVICES=0"
+
+# Note: Requires /dev/xdma0_h2c_0 permissions for zero-copy memory writes
+SupplementaryGroups=video render
+
+[Install]
+WantedBy=multi-user.target

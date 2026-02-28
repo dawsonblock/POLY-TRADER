@@ -1,0 +1,18 @@
+[Unit]
+Description=Polymarket Rust Execution Engine (Sniper)
+After=network.target poly-oracle.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/poly-trader/execution/poly_sniper
+# Run the highly optimized release binary
+ExecStart=/opt/poly-trader/execution/poly_sniper/target/release/poly_sniper
+Restart=always
+RestartSec=3
+
+# Cap memory usage as a basic software HEAB safety mechanism
+MemoryMax=1G
+
+[Install]
+WantedBy=multi-user.target

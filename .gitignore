@@ -1,0 +1,20 @@
+# Environments & Secrets
+.env
+.env.*
+venv/
+venv_ai/
+.venv/
+
+# Python Cache
+__pycache__/
+*.pyc
+.mypy_cache/
+
+# Rust Execution Output
+execution/poly_sniper/target/
+execution/poly_sniper/Cargo.lock
+
+# Verilog Simulation Binary Outputs
+hardware/sim/*.out
+*.out
+*.vcd
