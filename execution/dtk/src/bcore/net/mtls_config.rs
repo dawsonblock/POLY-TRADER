@@ -6,7 +6,6 @@
  * Requires: CA cert, client cert, and client private key.
  */
 
-use std::sync::Arc;
 use rustls::{ClientConfig, RootCertStore};
 use rustls::pki_types::{CertificateDer, PrivateKeyDer};
 
