@@ -11,6 +11,7 @@ pub mod bcore {
     pub mod oracle   { pub mod fixed_oracle; }
     pub mod ledger   { pub mod capture; }
     pub mod telemetry { pub mod histogram; pub mod perf_counter; }
+    pub mod net      { pub mod mtls_config; }
     pub mod signing  { pub mod hsm_signer; }
 }
 
