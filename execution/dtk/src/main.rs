@@ -168,7 +168,7 @@ async fn main() {
         tick_count += 1;
 
         // 7. PERIODIC TELEMETRY REPORT
-        if tick_count % report_every == 0 {
+        if tick_count.is_multiple_of(report_every) {
             LATENCY.print_report();
             let _ = ledger.flush();
             println!("[DTK v2] Ticks processed: {tick_count}  Last VM cycles: {cycles_used}");

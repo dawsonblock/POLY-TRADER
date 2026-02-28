@@ -22,8 +22,8 @@ pub struct VmStateArea {
     pub order_intent_price: Fixed,
 }
 
-impl VmStateArea {
-    pub fn new() -> Self {
+impl Default for VmStateArea {
+    fn default() -> Self {
         Self {
             current_tick: Tick::default(),
             vpin_toxicity: Fixed(0),
@@ -32,6 +32,12 @@ impl VmStateArea {
             order_intent_size: Fixed(0),
             order_intent_price: Fixed(0),
         }
+    }
+}
+
+impl VmStateArea {
+    pub fn new() -> Self {
+        Self::default()
     }
 
     #[inline(always)]

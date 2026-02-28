@@ -57,12 +57,12 @@ pub fn execute(program: &[Instruction], arena: &mut VmStateArea) {
             OP_FPADD => {
                 let a = arena.registers[inst.src_a as usize];
                 let b = arena.registers[inst.src_b as usize];
-                arena.registers[inst.dst as usize] = a.add(b);
+                arena.registers[inst.dst as usize] = a + b;
             },
             OP_FPMUL => {
                 let a = arena.registers[inst.src_a as usize];
                 let b = arena.registers[inst.src_b as usize];
-                arena.registers[inst.dst as usize] = a.mul(b);
+                arena.registers[inst.dst as usize] = a * b;
             },
             OP_CMP_GT => {
                 let a = arena.registers[inst.src_a as usize];

@@ -16,6 +16,7 @@ const BLOCK_SIZE: usize = 90;
 const HASH_SIZE:  usize = 32;
 const RECORD_SIZE: usize = BLOCK_SIZE + HASH_SIZE; // 122 bytes per record
 
+#[allow(dead_code)]
 #[derive(Debug)]
 struct Block {
     prev_hash:       [u8; 32],

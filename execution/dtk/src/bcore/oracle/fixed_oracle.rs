@@ -24,11 +24,11 @@ static CDF_TABLE: std::sync::OnceLock<[i64; CDF_TABLE_SIZE]> = std::sync::OnceLo
 
 fn init_cdf_table() -> [i64; CDF_TABLE_SIZE] {
     let mut table = [0i64; CDF_TABLE_SIZE];
-    for i in 0..CDF_TABLE_SIZE {
+    for (i, val) in table.iter_mut().enumerate() {
         let z = CDF_Z_MIN + (i as f64) * (CDF_Z_MAX - CDF_Z_MIN) / (CDF_TABLE_SIZE as f64);
         // Abramowitz & Stegun approximation — deterministic, no libm sqrt dependency
         let cdf = abramowitz_stegun_cdf(z);
-        table[i] = Fixed::from_f64(cdf).0;
+        *val = Fixed::from_f64(cdf).0;
     }
     table
 }
@@ -96,19 +96,19 @@ pub fn compute_signal(
     let k = strike;
 
     // (S - K) / K  ≈ ln(S/K) near-the-money (Q32.32)
-    let log_approx = s.sub(k).mul(Fixed::from_f64(1.0).mul(k).mul(Fixed::from_f64(1.0)));
+    let log_approx = (s - k) * (Fixed::from_f64(1.0) * k * Fixed::from_f64(1.0));
 
     // σ² / 2
-    let sigma_sq_half = sigma.mul(sigma).mul(Fixed::from_f64(0.5));
+    let sigma_sq_half = sigma * sigma * Fixed::from_f64(0.5);
 
     // (r - σ²/2) * τ
-    let drift = risk_free.sub(sigma_sq_half).mul(tau);
+    let drift = (risk_free - sigma_sq_half) * tau;
 
     // σ * √τ — approximate √τ as τ^0.5 via lookup or Newton step
     // For simplicity: √τ ≈ τ * 2 for small τ (tau << 1 day)
     // Production: replace with proper fixed-point sqrt
-    let sqrt_tau = tau.mul(Fixed::from_f64(2.0)); // Approximation only
-    let sigma_sqrt_tau = sigma.mul(sqrt_tau);
+    let sqrt_tau = tau * Fixed::from_f64(2.0); // Approximation only
+    let sigma_sqrt_tau = sigma * sqrt_tau;
 
     // d2 = (log_approx + drift) / sigma_sqrt_tau
     // Guard: if sigma_sqrt_tau ≈ 0, clamp to avoid division by zero
@@ -116,7 +116,7 @@ pub fn compute_signal(
         Fixed(0)
     } else {
         // Fixed-point division: (a * SCALE) / b
-        let numerator = log_approx.add(drift);
+        let numerator = log_approx + drift;
         Fixed(
             ((numerator.0 as i128 * Fixed::SCALE as i128)
                 / sigma_sqrt_tau.0.max(1) as i128) as i64,

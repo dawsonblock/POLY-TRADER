@@ -62,7 +62,7 @@ def round_trip_cost(
 if __name__ == "__main__":
     schedule = FeeSchedule()
     result = round_trip_cost(5_000, schedule, binance_side="taker", poly_side="taker")
-    print(f"All-in round trip cost for $5,000:")
+    print("All-in round trip cost for $5,000:")
     print(f"  Binance:  {result['binance_bps']:.1f} bps")
     print(f"  Poly:     {result['poly_bps']:.1f} bps")
     print(

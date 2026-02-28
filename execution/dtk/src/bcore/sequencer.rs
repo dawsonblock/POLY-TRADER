@@ -4,13 +4,15 @@
  * cause an unrecoverable lag state. "Amnesia State".
  */
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Default)]
 pub enum SyncState {
+    #[default]
     Valid,
     Amnesia, // Network gap detected. VM must Halt.
     Reconciling, // Waiting for Out-Of-Band REST response
 }
 
+#[derive(Default)]
 pub struct Sequencer {
     pub state: SyncState,
     pub expected_next_seq: u64,

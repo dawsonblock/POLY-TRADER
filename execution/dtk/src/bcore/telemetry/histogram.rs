@@ -25,6 +25,12 @@ pub struct LatencyHistogram {
     max_ns:   AtomicU64,
 }
 
+impl Default for LatencyHistogram {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl LatencyHistogram {
     pub const fn new() -> Self {
         Self {

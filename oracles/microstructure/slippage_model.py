@@ -3,7 +3,6 @@ Tier 6: Microstructure Slippage Model
 Estimates market impact (slippage) from real L2 order book depth.
 """
 
-import json
 from dataclasses import dataclass
 from typing import List, Tuple
 
