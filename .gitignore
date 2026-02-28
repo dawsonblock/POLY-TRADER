@@ -13,6 +13,8 @@ __pycache__/
 # Rust Execution Output
 execution/poly_sniper/target/
 execution/poly_sniper/Cargo.lock
+execution/dtk/target/
+execution/boreal_audit/target/
 
 # Verilog Simulation Binary Outputs
 hardware/sim/*.out
