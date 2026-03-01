@@ -1,33 +1,32 @@
-# POLY-TRADER: Deterministic Trading Kernel (DTK) v1
+# POLY-TRADER: Deterministic Trading Kernel (DTK) v2
 
 > A production-grade, hardware-enforced, cryptographically-auditable financial execution appliance built on Polymarket's CTF exchange.
 
-This is not a simple trading bot. It is a **multi-layer deterministic execution stack** with hardware-enforced risk limits, a bounded decision VM, and a full cryptographic audit trail. Every design decision prioritizes: **no hidden state, deterministic replay, hard risk bounds before signing**.
+This is **DTK v2**—a fully deterministic execution stack that eliminates non-deterministic structural fractures (Python/ZeroMQ) in favor of a unified Rust pipeline. It features hardware-enforced risk limits, a bounded decision VM, and a binary hash-chained audit trail.
 
 ---
 
-## Architecture Overview
+## Architecture Overview (v2)
 
 ```
                 ┌─────────────────────┐
-  Binance WS ─► │   Oracle Layer       │  Python (ZeroMQ broadcast)
-  / REST API    │ poly_oracle.py       │  Black-Scholes binary fair value
-                │ apex_oracle.py       │  Mamba-2 SSM AI (H100 GPU)
+  Binance WS ──►│   Unified Ingest     │  Rust (Core 0 / SO_TIMESTAMPING)
+                │   ws_feed.rs         │  Q32.32 Fixed-Point sealed boundary
                 └────────┬────────────┘
-                         │ ZeroMQ IPC
+                         │ SPSC Lock-free Ring (crossbeam)
                 ┌────────▼────────────┐
-                │   Execution Layer   │  Rust (DTK v1)
+                │   Execution Layer   │  Rust (DTK v2 / Core 1)
                 │ Sequencer (gap det) │◄─ Frame drop = Amnesia State = HALT
+                │ Fixed Oracle (BS)   │◄─ Deterministic A&S CDF Lookup
                 │ Decision VM (Q32.32)│◄─ Hard 500-instruction budget/tick
-                │ Ledger (SHA-256)    │◄─ Hash-chained audit trail
+                │ Ledger (SHA-256)    │◄─ Binary hash-chained audit trail
                 └────────┬────────────┘
-                         │ DMA / PCIe
+                         │ 
                 ┌────────▼────────────┐
-                │   Hardware Layer    │  SystemVerilog (FPGA)
+                │   Security & Risk   │  HSM / FPGA
+                │ hsm_signer.rs       │◄─ Secure intent signing (Dev: Software)
                 │ boreal_dual_clamp   │◄─ SIL-3 dual-channel inline firewall
-                │ token_bucket        │◄─ Rate limiter: max N orders/µs
-                │ bsb_core            │◄─ Physics-based QUBO solver
-                │ heab_gate           │◄─ Optical kill switch on overflow
+                │ token_bucket        │◄─ Rate limiter (SVA verified)
                 └─────────────────────┘
 ```
 
@@ -38,137 +37,86 @@ This is not a simple trading bot. It is a **multi-layer deterministic execution 
 ```
 POLY-TRADER/
 │
-├── hardware/               # FPGA / SystemVerilog
+├── hardware/               # FPGA / SystemVerilog (SVA Verified)
 │   ├── src/
-│   │   ├── bsb_core.sv             # Ballistic Simulated Bifurcation solver
-│   │   ├── heab_gate.sv            # Hardware Execution Advisory Board gate
-│   │   ├── war_machine_v4_apex.sv  # Top-level FPGA wrapper
 │   │   ├── boreal_dual_clamp.sv    # SIL-3 dual-channel inline risk firewall
 │   │   └── token_bucket.sv         # Hardware token bucket rate limiter
-│   └── sim/
-│       ├── tb_bsb.sv               # BSB physics testbench
-│       ├── tb_boreal_clamp.sv      # Risk clamp verification (PASS ✅)
-│       └── tb_token_bucket.sv      # Rate limiter verification (PASS ✅)
+│   └── formal/
+│       └── boreal_clamp.sby        # Symbiyosys formal proof script
 │
-├── oracles/                # Pricing / Signal Layer
-│   ├── poly_oracle.py              # Binance WS → Black-Scholes → ZeroMQ
-│   ├── apex_oracle.py              # AI oracle (Mamba-2 SSM, H100 GPU)
-│   └── mc_simulation.py            # Monte Carlo EV reality check
+├── oracles/                # Pricing / Microstructure Models
+│   ├── microstructure/             # Realistic friction models (Slippage/Fees)
+│   ├── backtest/
+│   │   └── replay_backtest.py      # DTK v2 replay verifier harness
+│   └── apex_oracle.py              # AI oracle (Mamba-2 SSM, H100 GPU)
 │
 ├── execution/              # Low-latency Execution Layer
-│   ├── dtk/                        # ★ Deterministic Trading Kernel v1 (Rust)
+│   ├── dtk/                        # ★ Deterministic Trading Kernel v2 (Rust)
 │   │   └── src/
-│   │       ├── main.rs             # Hot loop: Ingest → VM → Clamp → Egress
+│   │       ├── main.rs             # Unified Pipeline: Ingest → Oracle → VM
 │   │       └── bcore/
-│   │           ├── features/fixed_point.rs  # Q32.32 deterministic arithmetic
-│   │           ├── feed/tick.rs             # Canonical market tick struct
-│   │           ├── memory.rs               # Pre-allocated zero-GC arena
-│   │           ├── sequencer.rs            # TCP gap detection / Amnesia State
-│   │           └── decision_vm/
-│   │               └── interpreter.rs      # Bounded bytecode VM (500 instr budget)
-│   ├── poly_sniper/                # Legacy Rust sniper (EIP-712 signing)
-│   ├── boreal_audit/               # Cryptographic ledger audit CLI (Rust)
-│   └── cpp_router.cpp              # Optional bare-metal UDP bypass
+│   │           ├── ingest/         # Rust WS client & SPSC ring buffer
+│   │           ├── oracle/         # Deterministic Fixed-Point pricing
+│   │           ├── ledger/         # Binary hash-chained capture
+│   │           ├── signing/        # HSM OrderSigner abstraction
+│   │           └── decision_vm/    # Bounded bytecode VM
+│   └── replay/                     # Standalone replay verifier CLI (Rust)
 │
 └── ops/                    # Deployment
-    ├── setup_ubuntu.sh             # Deps, TCP stack tuning, build pipeline
+    ├── setup_ubuntu.sh             # Unified v2 setup (No legacy ZeroMQ)
     ├── setup_h100.sh               # CUDA 12.1 + Mamba-SSM for AI oracle
-    ├── poly-oracle.service         # systemd: Python oracle daemon
-    ├── poly-sniper.service         # systemd: Rust sniper daemon
-    └── apex-oracle.service         # systemd: AI oracle daemon
+    └── dtk.service                 # systemd: DTK v2 production daemon
 ```
 
 ---
 
-## Core Design Principles (DTK Spec)
+## v2 Design Principles
 
 | Principle | Implementation |
 |---|---|
-| **No hidden state** | All market state in `VmStateArea` segments A–D |
-| **Deterministic replay** | SHA-256 hash-chained ledger via `boreal_audit` |
-| **Bounded execution** | VM halts at 500 instruction budget per tick |
-| **Zero dynamic allocation** | Pre-allocated arena, no `Box/Vec` in hot path |
-| **Hard risk before signing** | FPGA clamp drops packet before it hits the MAC |
-| **Amnesia protection** | Sequencer halts VM on any TCP frame gap |
-| **Dual-channel SIL-3** | Both channels must agree or `fault_flag` fires |
+| **Structural Integrity** | Floats are prohibited; all data converted to Q32.32 at the ingest edge. |
+| **Zero Jitter** | No ZeroMQ/IPC between components; lock-free SPSC rings on isolated cores. |
+| **Deterministic Replay** | Every tick is SHA-256 chained. Replay verifier asserts bit-parity. |
+| **Bounded execution** | VM halts at 500 instruction budget per tick. |
+| **Zero dynamic allocation** | Pre-allocated arena, no `Box/Vec` in hot path. |
+| **Verified Safety** | Hardware risk clamps verified via formal Symbiyosys proofs. |
+| **Secure Egress** | HSM-backed signing and TLS 1.3 mTLS with cert pinning. |
 
 ---
 
 ## Quick Start
 
-### 1. Build the DTK (Rust)
+### 1. Build & Test DTK v2
 
 ```bash
-# Ensure Rust is installed: https://rustup.rs
 cd execution/dtk
 cargo build --release
 cargo test
 ```
 
-Expected output: `6 passed; 0 failed`
-
-### 2. Run the Hardware Simulations (Icarus Verilog)
+### 2. Verify Deterministic Replay
 
 ```bash
-# Install: brew install icarus-verilog
-iverilog -g2012 -o hardware/sim/tb_token_bucket.out \
-  hardware/sim/tb_token_bucket.sv hardware/src/token_bucket.sv
-vvp hardware/sim/tb_token_bucket.out
+# Process market data to generate a ledger
+./target/release/dtk --symbol BTCUSDT --capture execution.log
 
-iverilog -g2012 -o hardware/sim/tb_boreal_clamp.out \
-  hardware/sim/tb_boreal_clamp.sv hardware/src/boreal_dual_clamp.sv
-vvp hardware/sim/tb_boreal_clamp.out
+# Run the verifier to assert hash chain integrity
+cd ../replay
+cargo run -- --log ../dtk/execution.log
 ```
 
-Expected: `[PASS] Hardware caught the burst.` / `[PASS] Clamp caught notional breach.` / `[PASS] Clamp caught inventory breach.`
-
-### 3. Run the Oracle (Python)
-
-```bash
-cp .env.example .env   # add your Alchemy WSS key + wallet private key
-
-python3 -m venv venv && source venv/bin/activate
-pip install websockets pyzmq scipy
-python oracles/poly_oracle.py
-```
-
-### 4. Deploy to Production (Ubuntu/AWS)
+### 3. Deploy to Production (Ubuntu/AWS)
 
 ```bash
 chmod +x ops/setup_ubuntu.sh
 sudo ./ops/setup_ubuntu.sh
 
-# Copy and enable services
-sudo cp ops/*.service /etc/systemd/system/
-sudo systemctl enable poly-oracle poly-sniper
-sudo systemctl start poly-oracle poly-sniper
+# Start the unified kernel
+sudo systemctl start dtk
 ```
-
----
-
-## Hardware Risk Limits (Default)
-
-| Limit | Value | Enforced By |
-|---|---|---|
-| Max notional per order | $10,000 | `boreal_dual_clamp.sv` |
-| Max aggregate inventory | $50,000 | `boreal_dual_clamp.sv` |
-| Max orders per microsecond | 5 | `token_bucket.sv` |
-| Software HEAB inventory | $5,000 | `poly_sniper/src/main.rs` |
-
----
-
-## Verification Results
-
-| Component | Test | Status |
-|---|---|---|
-| Q32.32 Fixed-Point Arithmetic | Determinism + overflow wrapping | ✅ PASS |
-| Sequencer | Perfect sequence + amnesia gap detection | ✅ PASS |
-| Decision VM | Emission + budget halt enforcement | ✅ PASS |
-| Token Bucket | Burst detection + refill | ✅ PASS |
-| Boreal Dual Clamp | Notional breach + inventory ceiling | ✅ PASS |
 
 ---
 
 ## Security Notice
 
-This system is for **research and educational purposes**. Cross-exchange arbitrage may be subject to derivatives trading regulations in your jurisdiction. Never fund a live wallet with funds you cannot afford to lose.
+This system is for **research and educational purposes**. All production deployments should use the `HSM` signer backend. Never fund a live wallet with funds you cannot afford to lose.
