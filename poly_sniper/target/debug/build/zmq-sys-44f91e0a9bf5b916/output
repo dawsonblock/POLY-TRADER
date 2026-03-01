@@ -1,0 +1,215 @@
+cargo:rerun-if-changed=build/main.rs
+cargo:rerun-if-env-changed=PROFILE
+OPT_LEVEL = Some(0)
+TARGET = Some(aarch64-apple-darwin)
+CARGO_ENCODED_RUSTFLAGS = Some()
+HOST = Some(aarch64-apple-darwin)
+cargo:rerun-if-env-changed=CXX_aarch64-apple-darwin
+CXX_aarch64-apple-darwin = None
+cargo:rerun-if-env-changed=CXX_aarch64_apple_darwin
+CXX_aarch64_apple_darwin = None
+cargo:rerun-if-env-changed=HOST_CXX
+HOST_CXX = None
+cargo:rerun-if-env-changed=CXX
+CXX = None
+cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+RUSTC_WRAPPER = None
+cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+CRATE_CC_NO_DEFAULTS = None
+DEBUG = Some(true)
+cargo:rerun-if-env-changed=MACOSX_DEPLOYMENT_TARGET
+MACOSX_DEPLOYMENT_TARGET = None
+cargo:rerun-if-env-changed=CXXFLAGS
+CXXFLAGS = None
+cargo:rerun-if-env-changed=HOST_CXXFLAGS
+HOST_CXXFLAGS = None
+cargo:rerun-if-env-changed=CXXFLAGS_aarch64_apple_darwin
+CXXFLAGS_aarch64_apple_darwin = None
+cargo:rerun-if-env-changed=CXXFLAGS_aarch64-apple-darwin
+CXXFLAGS_aarch64-apple-darwin = None
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+cargo:warning=/Users/dawsonblock/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeromq-src-0.2.6+4.3.4/vendor/src/ip.cpp:233:37: warning: unused parameter 's_' [-Wunused-parameter]
+cargo:warning=  233 | void zmq::set_socket_priority (fd_t s_, int priority_)
+cargo:warning=      |                                     ^
+cargo:warning=/Users/dawsonblock/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeromq-src-0.2.6+4.3.4/vendor/src/ip.cpp:233:45: warning: unused parameter 'priority_' [-Wunused-parameter]
+cargo:warning=  233 | void zmq::set_socket_priority (fd_t s_, int priority_)
+cargo:warning=      |                                             ^
+cargo:warning=2 warnings generated.
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+cargo:warning=/Users/dawsonblock/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeromq-src-0.2.6+4.3.4/vendor/src/session_base.cpp:453:46: warning: unused parameter 'handshaked_' [-Wunused-parameter]
+cargo:warning=  453 | void zmq::session_base_t::engine_error (bool handshaked_,
+cargo:warning=      |                                              ^
+cargo:warning=1 warning generated.
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+cargo:warning=/Users/dawsonblock/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeromq-src-0.2.6+4.3.4/vendor/src/tcp_address.cpp:132:12: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]
+cargo:warning=  132 |     pos += sprintf (pos, "%d", ntohs (port_));
+cargo:warning=      |            ^
+cargo:warning=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_stdio.h:278:1: note: 'sprintf' has been explicitly marked deprecated here
+cargo:warning=  278 | __deprecated_msg("This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.")
+cargo:warning=      | ^
+cargo:warning=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+cargo:warning=  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+cargo:warning=      |                                                       ^
+cargo:warning=1 warning generated.
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+cargo:warning=/Users/dawsonblock/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeromq-src-0.2.6+4.3.4/vendor/src/udp_engine.cpp:371:7: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]
+cargo:warning=  371 |       sprintf (port, "%d", static_cast<int> (ntohs (addr_->sin_port)));
+cargo:warning=      |       ^
+cargo:warning=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_stdio.h:278:1: note: 'sprintf' has been explicitly marked deprecated here
+cargo:warning=  278 | __deprecated_msg("This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.")
+cargo:warning=      | ^
+cargo:warning=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+cargo:warning=  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+cargo:warning=      |                                                       ^
+cargo:warning=1 warning generated.
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+cargo:warning=clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+cargo:warning=/Users/dawsonblock/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zeromq-src-0.2.6+4.3.4/vendor/src/zmtp_engine.cpp:345:53: warning: unused parameter 'downgrade_sub_' [-Wunused-parameter]
+cargo:warning=  345 | bool zmq::zmtp_engine_t::handshake_v3_x (const bool downgrade_sub_)
+cargo:warning=      |                                                     ^
+cargo:warning=1 warning generated.
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+cargo:rerun-if-env-changed=AR_aarch64-apple-darwin
+AR_aarch64-apple-darwin = None
+cargo:rerun-if-env-changed=AR_aarch64_apple_darwin
+AR_aarch64_apple_darwin = None
+cargo:rerun-if-env-changed=HOST_AR
+HOST_AR = None
+cargo:rerun-if-env-changed=AR
+AR = None
+cargo:rerun-if-env-changed=ARFLAGS
+ARFLAGS = None
+cargo:rerun-if-env-changed=HOST_ARFLAGS
+HOST_ARFLAGS = None
+cargo:rerun-if-env-changed=ARFLAGS_aarch64_apple_darwin
+ARFLAGS_aarch64_apple_darwin = None
+cargo:rerun-if-env-changed=ARFLAGS_aarch64-apple-darwin
+ARFLAGS_aarch64-apple-darwin = None
+cargo:rustc-link-lib=static=zmq
+cargo:rustc-link-search=native=/Users/dawsonblock/Downloads/POLY-TRADER/poly_sniper/target/debug/build/zmq-sys-44f91e0a9bf5b916/out/lib
+cargo:rerun-if-env-changed=CXXSTDLIB_aarch64-apple-darwin
+CXXSTDLIB_aarch64-apple-darwin = None
+cargo:rerun-if-env-changed=CXXSTDLIB_aarch64_apple_darwin
+CXXSTDLIB_aarch64_apple_darwin = None
+cargo:rerun-if-env-changed=HOST_CXXSTDLIB
+HOST_CXXSTDLIB = None
+cargo:rerun-if-env-changed=CXXSTDLIB
+CXXSTDLIB = None
+cargo:rustc-link-lib=c++
+cargo:rustc-link-search=native=/Users/dawsonblock/Downloads/POLY-TRADER/poly_sniper/target/debug/build/zmq-sys-44f91e0a9bf5b916/out/lib
+cargo:rustc-link-lib=static=zmq
+cargo:include=/Users/dawsonblock/Downloads/POLY-TRADER/poly_sniper/target/debug/build/zmq-sys-44f91e0a9bf5b916/out/source/include
+cargo:lib=/Users/dawsonblock/Downloads/POLY-TRADER/poly_sniper/target/debug/build/zmq-sys-44f91e0a9bf5b916/out/lib
+cargo:out=/Users/dawsonblock/Downloads/POLY-TRADER/poly_sniper/target/debug/build/zmq-sys-44f91e0a9bf5b916/out

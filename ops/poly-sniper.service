@@ -1,13 +1,13 @@
 [Unit]
-Description=Polymarket Rust Execution Engine (Sniper)
-After=network.target poly-oracle.service
+Description=Boreal Deterministic Trading Kernel (DTK v2)
+After=network.target
 
 [Service]
 Type=simple
 User=ubuntu
-WorkingDirectory=/opt/poly-trader/execution/poly_sniper
-# Run the highly optimized release binary
-ExecStart=/opt/poly-trader/execution/poly_sniper/target/release/poly_sniper
+WorkingDirectory=/opt/poly-trader/execution/dtk
+# Run the highly optimized v2 kernel
+ExecStart=/opt/poly-trader/execution/dtk/target/release/dtk
 Restart=always
 RestartSec=3
 

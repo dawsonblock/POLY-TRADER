@@ -21,30 +21,33 @@ net.ipv4.tcp_sack = 1
 EOF'
 sudo sysctl -p /etc/sysctl.d/99-poly.conf
 
-# 3. Python Environment
+# 3. Python Environment (Optional for Microstructure Models)
 echo "[SETUP] Installing Python Dependencies..."
 cd /opt/poly-trader
 python3 -m venv venv
 source venv/bin/activate
-pip install websockets pyzmq scipy python-dotenv
+pip install websockets scipy python-dotenv
 
 # 4. Rust Toolchain
 echo "[SETUP] Installing Rustup..."
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 source "$HOME/.cargo/env"
 
-# 5. Build Sniper
-echo "[SETUP] Compiling Rust Engine for Release..."
-cd /opt/poly-trader/execution/poly_sniper
+# 5. Build DTK v2
+echo "[SETUP] Compiling DTK v2 for Release..."
+cd /opt/poly-trader/execution/dtk
 cargo build --release
 
-# 6. Install Systemd Services
+# 6. Build Replay Verifier
+echo "[SETUP] Compiling Replay Verifier..."
+cd /opt/poly-trader/execution/replay
+cargo build --release
+
+# 7. Install Systemd Services
 echo "[SETUP] Installing Systemd Services..."
-sudo cp /opt/poly-trader/ops/poly-oracle.service /etc/systemd/system/
-sudo cp /opt/poly-trader/ops/poly-sniper.service /etc/systemd/system/
+sudo cp /opt/poly-trader/ops/poly-sniper.service /etc/systemd/system/dtk.service
 
 sudo systemctl daemon-reload
-sudo systemctl enable poly-oracle
-sudo systemctl enable poly-sniper
+sudo systemctl enable dtk
 
-echo "[SETUP] COMPLETE. Start services with: 'sudo systemctl start poly-oracle' and 'sudo systemctl start poly-sniper'"
+echo "[SETUP] COMPLETE. Start the kernel with: 'sudo systemctl start dtk'"
