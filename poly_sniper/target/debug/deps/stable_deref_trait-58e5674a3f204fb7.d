@@ -1,5 +1,0 @@
-/Users/dawsonblock/Downloads/POLY-TRADER/poly_sniper/target/debug/deps/stable_deref_trait-58e5674a3f204fb7.d: /Users/dawsonblock/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/stable_deref_trait-1.2.1/src/lib.rs
-
-/Users/dawsonblock/Downloads/POLY-TRADER/poly_sniper/target/debug/deps/libstable_deref_trait-58e5674a3f204fb7.rmeta: /Users/dawsonblock/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/stable_deref_trait-1.2.1/src/lib.rs
-
-/Users/dawsonblock/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/stable_deref_trait-1.2.1/src/lib.rs:
